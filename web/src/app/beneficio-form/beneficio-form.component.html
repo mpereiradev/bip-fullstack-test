@@ -1,0 +1,160 @@
+<div class="max-w-7xl mx-auto px-6 py-8">
+
+  <!-- Breadcrumb -->
+  <div class="flex items-center gap-2 text-sm text-muted mb-8">
+    <a routerLink="/beneficios" class="hover:text-primary-600 transition-colors">Benefícios</a>
+    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+    </svg>
+    <span class="text-ink font-medium">{{ editando() ? 'Editar' : 'Novo Benefício' }}</span>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+    <!-- Form card (2/3) -->
+    <div class="lg:col-span-2 bg-surface rounded-2xl p-8" style="box-shadow: var(--shadow-card)">
+
+      <div class="mb-6">
+        <h1 class="text-xl font-bold text-ink">
+          {{ editando() ? 'Editar Benefício' : 'Novo Benefício' }}
+        </h1>
+        <p class="text-sm text-muted mt-1">
+          {{ editando() ? 'Atualize as informações do benefício.' : 'Preencha os dados para criar um novo benefício.' }}
+        </p>
+      </div>
+
+      @if (erro()) {
+        <div class="flex items-center gap-3 bg-danger-bg text-danger-text rounded-xl p-4 mb-6 text-sm">
+          <svg class="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+          </svg>
+          {{ erro() }}
+        </div>
+      }
+
+      <form [formGroup]="form" (ngSubmit)="salvar()" class="space-y-5">
+
+        <!-- Nome -->
+        <div>
+          <label class="block text-sm font-semibold text-ink mb-1.5">
+            Nome <span class="text-primary-500">*</span>
+          </label>
+          <input formControlName="nome"
+                 type="text"
+                 maxlength="100"
+                 placeholder="Ex: Vale Alimentação"
+                 class="w-full border rounded-xl px-4 py-3 text-sm text-ink placeholder-muted
+                        transition-all outline-none
+                        border-gray-200 bg-gray-50
+                        focus:bg-surface focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
+                 [class.border-danger-text]="isInvalid('nome')"
+                 [class.bg-danger-bg]="isInvalid('nome')">
+          @if (isInvalid('nome')) {
+            <p class="text-xs text-danger-text mt-1.5 flex items-center gap-1">
+              <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+              </svg>
+              Nome é obrigatório (máx. 100 caracteres).
+            </p>
+          }
+        </div>
+
+        <!-- Descrição -->
+        <div>
+          <label class="block text-sm font-semibold text-ink mb-1.5">Descrição</label>
+          <textarea formControlName="descricao"
+                    maxlength="255"
+                    rows="3"
+                    placeholder="Descreva o benefício (opcional)"
+                    class="w-full border rounded-xl px-4 py-3 text-sm text-ink placeholder-muted
+                           resize-none transition-all outline-none
+                           border-gray-200 bg-gray-50
+                           focus:bg-surface focus:border-primary-500 focus:ring-2 focus:ring-primary-100">
+          </textarea>
+          <p class="text-xs text-muted mt-1 text-right">
+            {{ form.get('descricao')?.value?.length ?? 0 }}/255
+          </p>
+        </div>
+
+        <!-- Valor -->
+        <div>
+          <label class="block text-sm font-semibold text-ink mb-1.5">
+            Valor (R$) <span class="text-primary-500">*</span>
+          </label>
+          <input formControlName="valor"
+                 type="text"
+                 inputmode="numeric"
+                 placeholder="R$ 0,00"
+                 appCurrencyMask
+                 class="w-full border rounded-xl px-4 py-3 text-sm text-ink placeholder-muted
+                        transition-all outline-none
+                        border-gray-200 bg-gray-50
+                        focus:bg-surface focus:border-primary-500 focus:ring-2 focus:ring-primary-100"
+                 [class.border-danger-text]="isInvalid('valor')"
+                 [class.bg-danger-bg]="isInvalid('valor')">
+          @if (isInvalid('valor')) {
+            <p class="text-xs text-danger-text mt-1.5 flex items-center gap-1">
+              <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-5a.75.75 0 01.75.75v4.5a.75.75 0 01-1.5 0v-4.5A.75.75 0 0110 5zm0 10a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
+              </svg>
+              Valor deve ser maior que zero.
+            </p>
+          }
+        </div>
+
+        <!-- Actions -->
+        <div class="flex gap-3 pt-2">
+          <button type="submit"
+                  [disabled]="form.invalid || salvando()"
+                  class="flex-1 flex items-center justify-center gap-2
+                         bg-primary-600 hover:bg-primary-700 text-white
+                         py-3 rounded-xl text-sm font-semibold
+                         transition-colors shadow-sm
+                         disabled:opacity-50 disabled:cursor-not-allowed">
+            @if (salvando()) {
+              <div class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+              Salvando...
+            } @else {
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+              </svg>
+              {{ editando() ? 'Salvar Alterações' : 'Criar Benefício' }}
+            }
+          </button>
+          <a routerLink="/beneficios"
+             class="px-6 py-3 rounded-xl text-sm font-semibold text-muted
+                    border border-gray-200 hover:bg-gray-50 transition-colors text-center">
+            Cancelar
+          </a>
+        </div>
+
+      </form>
+    </div>
+
+    <!-- Info card (1/3) -->
+    <div class="bg-primary-600 rounded-2xl p-6 text-white flex flex-col justify-between"
+         style="box-shadow: var(--shadow-card)">
+      <div>
+        <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center mb-4">
+          <svg class="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+          </svg>
+        </div>
+        <h3 class="font-bold text-lg mb-2">
+          {{ editando() ? 'Editando Benefício' : 'Sobre os Benefícios' }}
+        </h3>
+        <p class="text-sm text-white/80 leading-relaxed">
+          {{ editando()
+            ? 'Atualize nome, descrição e valor. O status e o histórico de transferências são preservados.'
+            : 'Benefícios são unidades com saldo que podem receber e enviar valores via transferência atômica e segura.' }}
+        </p>
+      </div>
+      <div class="mt-6 pt-6 border-t border-white/20 text-xs text-white/60">
+        Transferências usam locking pessimista para garantir consistência.
+      </div>
+    </div>
+
+  </div>
+</div>

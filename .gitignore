@@ -1,0 +1,26 @@
+# Build outputs
+**/target/
+web/dist/
+web/.angular/
+
+# Dependencies
+web/node_modules/
+
+# Local data (H2 + PostgreSQL volumes)
+data/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.local
+
+.claude
+CLAUDE.md

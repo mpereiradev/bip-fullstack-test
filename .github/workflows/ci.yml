@@ -1,0 +1,62 @@
+name: CI
+
+on: [push, pull_request]
+
+jobs:
+
+  ejb:
+    name: EJB — Build & Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+      - run: mvn -B -f ejb/pom.xml clean package
+
+  api:
+    name: API — Build & Test
+    runs-on: ubuntu-latest
+    needs: ejb
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+      - name: Install EJB locally
+        run: mvn -B -f ejb/pom.xml install -DskipTests
+      - run: mvn -B -f api/pom.xml clean package
+
+  web:
+    name: Web — Build & Test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+        working-directory: web
+      - run: npm run build -- --configuration production
+        working-directory: web
+      - run: npm test -- --watch=false --browsers=ChromeHeadless
+        working-directory: web
+
+  docker:
+    name: Docker — Build Images
+    runs-on: ubuntu-latest
+    needs: [api, web]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Build API image
+        run: docker build -f api/Dockerfile -t beneficio-api:${{ github.sha }} .
+
+      - name: Build Web image
+        run: docker build -t beneficio-web:${{ github.sha }} web/

@@ -1,0 +1,50 @@
+@import "tailwindcss";
+@source "./app/**/*.html";
+@source "./app/**/*.ts";
+
+@theme {
+  --color-app-bg:  #f0f4f8;
+  --color-surface: #ffffff;
+
+  --color-primary-50:  #eff5ff;
+  --color-primary-100: #dce8fb;
+  --color-primary-200: #b8d1f8;
+  --color-primary-500: #2563c8;
+  --color-primary-600: #1a4fa8;
+  --color-primary-700: #153d84;
+
+  --color-ink:   #0f1c3f;
+  --color-muted: #64748b;
+
+  --color-success-bg:   #d1fae5;
+  --color-success-text: #065f46;
+  --color-danger-bg:    #fee2e2;
+  --color-danger-text:  #991b1b;
+  --color-warning-bg:   #fef9c3;
+  --color-warning-text: #854d0e;
+
+  --shadow-card:  0 1px 4px 0 rgb(0 0 0 / 0.06);
+  --shadow-modal: 0 20px 60px -10px rgb(26 79 168 / 0.18);
+
+  /* Border radius — 20% menos arredondado */
+  --radius-lg:  0.4rem;
+  --radius-xl:  0.6rem;
+  --radius-2xl: 0.8rem;
+  --radius-3xl: 1.2rem;
+  --radius-4xl: 1.6rem;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-app-bg);
+    color: var(--color-ink);
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-primary-200) transparent;
+  }
+}

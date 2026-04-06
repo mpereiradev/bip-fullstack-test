@@ -1,0 +1,10 @@
+.git
+.github
+.idea
+.claude
+docs
+data
+web
+**/target
+**/*.md
+**/.DS_Store
