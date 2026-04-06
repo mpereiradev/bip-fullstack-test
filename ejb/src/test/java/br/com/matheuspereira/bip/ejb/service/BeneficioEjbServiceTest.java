@@ -62,8 +62,8 @@ class BeneficioEjbServiceTest {
 
         assertThatThrownBy(() -> service.transfer(1L, 2L, new BigDecimal("1500.00")))
                 .isInstanceOf(SaldoInsuficienteException.class)
-                .hasMessageContaining("1000,00")
-                .hasMessageContaining("1500,00");
+                .hasMessageContaining("1.000,00")
+                .hasMessageContaining("1.500,00");
     }
 
     @Test
