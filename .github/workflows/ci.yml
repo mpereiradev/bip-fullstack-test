@@ -27,6 +27,8 @@ jobs:
           java-version: '21'
           distribution: 'temurin'
           cache: maven
+      - name: Install parent POM
+        run: mvn -B -N install
       - name: Install EJB locally
         run: mvn -B -f ejb/pom.xml install -DskipTests
       - run: mvn -B -f api/pom.xml clean package
